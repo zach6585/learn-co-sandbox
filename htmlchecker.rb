@@ -9,11 +9,18 @@ require 'json'
 
 
 
+# url = URI.parse('https://en.wikipedia.org/wiki/Baby')
+#       req = Net::HTTP.new(url.host, url.port)
+#       req.use_ssl = true
+#       res = req.request_head(url.path)
 
-require "net/http"
-url = URI.parse("https://en.wikipedia.org/wiki/fewjiofweio")
-req = Net::HTTP.new(url.host, url.port)
-req.use_ssl = true
-res = req.request_head(url.path)
 
-puts res.code 
+url = Nokogiri::HTML(open('https://en.wikipedia.org/wiki/Philosophy'))
+
+# puts res.code 
+i = 0 
+
+url.css('p').each do |p|
+  puts p.text unless p.css('b').to_s.strip.empty?
+  i += 1 
+ end 
