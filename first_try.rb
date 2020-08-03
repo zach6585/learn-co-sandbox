@@ -73,30 +73,30 @@ class Wikispeed
           i = 0 
         end 
       end 
-      fin_elem = nil 
-      q.css('a').each do |elem|
-        puts elem 
-          puts 'here'
-        words2.each do |item| 
-          if item.include?(elem.text)
-            if fin_elem == nil 
-              fin_elem = elem
-            end 
-          end 
-        end 
-      end 
+      # fin_elem = nil 
+      # q.css('a').each do |elem|
+      #   puts elem 
+      #     puts 'here'
+      #   words2.each do |item| 
+      #     if item.include?(elem.text)
+      #       if fin_elem == nil 
+      #         fin_elem = elem
+      #       end 
+      #     end 
+      #   end 
+      # end 
       puts words2
-      if "https://en.wikipedia.org#{fin_elem["href"]}" == "https://en.wikipedia.org/wiki/Philosophy"
-        i = 1
-        puts "We made it! It only took us #{@count} steps!"
-      else 
-        # puts "We didn't make it this round, so in we go again!"
-        runner("https://en.wikipedia.org#{fin_elem["href"]}")
-      end 
-    else 
-      puts "You got caught in a loop :("
-      return 
-    end 
+    #   if "https://en.wikipedia.org#{fin_elem["href"]}" == "https://en.wikipedia.org/wiki/Philosophy"
+    #     i = 1
+    #     puts "We made it! It only took us #{@count} steps!"
+    #   else 
+    #     # puts "We didn't make it this round, so in we go again!"
+    #     runner("https://en.wikipedia.org#{fin_elem["href"]}")
+    #   end 
+    # else 
+    #   puts "You got caught in a loop :("
+    #   return 
+    # end 
   end 
 end 
       
