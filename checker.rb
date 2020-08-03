@@ -6,14 +6,21 @@ require 'url_expander'
 
 
 class Philosophy
-  @@fails = []
-  @@successes = []
+  @@fails = 0
+  @@successes = 0
     attr_accessor :path, :count
   def initialize
     @count = 0 
     @path = []
   end 
   
+  def self.successes
+    @@successes
+  end 
+  
+  def self.fails
+    @@fails
+  end 
   def rules 
     puts "Wikispeedia is simple. You start at a Wikipedia of your choosing. From that page, one would click the first link, which is the text highlighted in blue, that isn't a disambiguation or in parentheses. One would keep doing this until you get to the goal page, which is Philosophy."
     getters
@@ -54,75 +61,76 @@ class Philosophy
   def runner(link)
     if link == "https://en.wikipedia.org/wiki/Philosophy"
         puts "We made it! It only took us #{@count} steps!"
-        @@successes << self 
+        @@successes += 1 
         return 
     end 
     @count += 1 
-    q = nil 
-    title = nil
+    i = 0
+    fin_elem = nil 
     uri = Nokogiri::HTML(open(link))
-    uri.css('p').each do |p| #Purpose of this is to get a title 
-      title = p unless p.css('b').to_s.strip.empty?
-      i = 0 
-      p.css('a').each do |elem|
-        if !elem.text.include?('[')
-          i += 1 
-        end 
-      end 
-      if i != 0 
-        if q == nil 
-          q = p unless p.text.strip.empty?
-        end 
-      end 
-    end
-    if !@path.include?(q.css('b').text)
-      @path << title.css('b').text
-      words = q.text.split('')
+    uri.css('p').each do |p| 
+      p.css('i').each do 
+      words = p.text.split('')
       lks = {}
-      q.css('a').each do |lk|
+      p.css('a').each do |lk|
         lks[lk.text] = lk unless lk.text.include?('[')
       end 
       i = 0 
       text = ''
       words.each do |char|
-        if char == '('
+        if char == '(' || char == '['
           i += 1  
-        elsif char == ')'
+        elsif char == ')' || char == ']'
           i -= 1 
         end 
         if i == 0 
           text += char 
         end 
       end 
-      fin_elem = nil 
       lks.each do |k,v|
         if text.include?(k)
           if fin_elem == nil 
-            fin_elem = v['href']
+            fin_elem = v['href'] unless v['title'] == "About this sound"
           end 
         end 
       end 
+      if fin_elem.to_s.strip.empty?
+        fin_elem = nil
+      end 
+    end 
+    puts 'here'
+    puts fin_elem
+    end_fin = fin_elem.split('')
+    i = 0 
+    fin_elem = ''
+    end_fin.each do |e|
+      if e == '#'
+        i += 1 
+      end 
+      if i == 0 
+        fin_elem += e
+      end 
+    end 
+   
+    if !@path.include?(fin_elem[6...-1])
+      @path << fin_elem[6...-1]
       runner("https://en.wikipedia.org#{fin_elem}")
-      
     else 
       puts "You got caught in a loop :("
-      @@fails << self 
+      @@fails += 1 
       return 
     end 
+    
+    
+    
   end 
 end 
-      
-  
-  
-  
-  
-  
-i = 0     
-    
 
-    
- 
+i = 0 
+while i <= 100 
+  tryal = Philosophy.new 
+  tryal.runner("https://en.wikipedia.org/wiki/Special:Random")
+  i += 1 
+end 
 
-"Conveniently, the Wiki page for philosophy has a disambiguation, a link in a parenthesis, and a regular link (plus is the end goal which is nice to set)"
-
-"May also (probably should honestly) make a second game where it's a race to see how fast. It'll track time and how many rounds it takes you, plus visited so far."
+puts Philosophy.successes/Philosophy.fails
