@@ -4,7 +4,7 @@ require 'net/http'
 
 
 
-class Science
+class Wikipedia
   @@fails = 0
   @@successes = 0
     attr_accessor :path, :count
@@ -134,9 +134,9 @@ end
 
 i = 0 
 while i <= 10
-  tryal = Science.new 
+  tryal = Wikipedia.new 
   tryal.runner("https://en.wikipedia.org/wiki/Special:Random")
   i += 1 
 end 
 
-puts Science.successes
+puts Wikipedia.successes
