@@ -1,7 +1,6 @@
 require 'nokogiri'
 require 'open-uri'
 require 'net/http'
-require 'url_expander'
 
 
 
@@ -76,7 +75,7 @@ class Philosophy
       words = p.text.split('')
       lks = {}
       p.css('a').each do |lk|
-        lks[lk.text] = lk unless (lk.text.include?('[') || (lk['title'].include?('wiktionary') if lk['title'])) 
+        lks[lk.text] = lk unless (lk.text.include?('[') || (lk['title'].include?('wiktionary') if lk['title']) || (lk[])) 
       end 
       i = 0 
       text = ''
