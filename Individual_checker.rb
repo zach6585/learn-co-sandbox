@@ -5,12 +5,12 @@ require 'url_expander'
 
 
 i = 0
-uri = Nokogiri::HTML(open("https://en.wikipedia.org/wiki/Propulsion"))
+uri = Nokogiri::HTML(open("https://en.wikipedia.org/wiki/Federal_government_of_the_United_States"))
 uri.css('p').each do |p|
   if i < 10 
     if !p.text.strip.empty?
-      puts p.css('i')
-      i +=1 
+    puts  p.css('a')
+      i +=1
     end 
   end 
 end 

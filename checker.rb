@@ -69,11 +69,14 @@ class Philosophy
     fin_elem = nil 
     uri = Nokogiri::HTML(open(link))
     uri.css('p').each do |p| 
-      p.css('i').each do 
+      eyes = []
+      p.css('i').each do |i|
+        eyes << i 
+      end 
       words = p.text.split('')
       lks = {}
       p.css('a').each do |lk|
-        lks[lk.text] = lk unless lk.text.include?('[')
+        lks[lk.text] = lk unless (lk.text.include?('[') || (lk['title'].include?('wiktionary') if lk['title'])) 
       end 
       i = 0 
       text = ''
@@ -90,7 +93,7 @@ class Philosophy
       lks.each do |k,v|
         if text.include?(k)
           if fin_elem == nil 
-            fin_elem = v['href'] unless v['title'] == "About this sound"
+            fin_elem = v['href'] unless (v['title'] == "About this sound" || eyes.include?(v)) 
           end 
         end 
       end 
