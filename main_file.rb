@@ -1,6 +1,7 @@
 require 'nokogiri'
 require 'open-uri'
 require 'net/http'
+require 'tk'
 
 
 
@@ -59,7 +60,7 @@ class Wikipedia
   
   def runner(link)
     if link == "https://en.wikipedia.org/wiki/Science"
-        # puts "We made it! It only took us #{@count} steps!"
+        puts "We made it! It only took us #{@count} steps!"
         @@successes += 1 
         return 
     end 
@@ -116,7 +117,6 @@ class Wikipedia
         fin_elem += e
       end 
     end 
-    puts fin_elem
    
     if !@path.include?(fin_elem[6...-1])
       @path << fin_elem[6...-1]
@@ -133,10 +133,17 @@ class Wikipedia
 end 
 
 i = 0 
-while i <= 10
+while i <= 100
   tryal = Wikipedia.new 
   tryal.runner("https://en.wikipedia.org/wiki/Special:Random")
   i += 1 
+  a.insert(1,'/')
+  puts a 
 end 
+
+TkFrame.new
+
+
+
 
 puts Wikipedia.successes
