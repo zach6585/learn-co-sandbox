@@ -1,7 +1,7 @@
 require 'nokogiri'
 require 'open-uri'
 require 'net/http'
-require 'tk'
+
 
 
 
@@ -21,41 +21,7 @@ class Wikipedia
   def self.fails
     @@fails
   end 
-  def rules 
-    puts "Wikispeedia is simple. You start at a Wikipedia of your choosing. From that page, one would click the first link, which is the text highlighted in blue, that isn't a disambiguation or in parentheses. One would keep doing this until you get to the goal page, which is Philosophy."
-    getters
-  end 
   
-  def getters
-    puts "Hello! Welcome to Wikispeedia a la Zach!"
-    puts "Do you want to play?"
-    puts "Input 'y' to play."
-    puts "Input 'n' to quit."
-    puts "Input 'r' to read the rules of the game."
-    a = gets.chomp
-    if a == 'r'
-      rules 
-    elsif a == "y"
-      puts "What wikipedia page do you want to start on?"
-      b = gets.chomp
-      link = "https://en.wikipedia.org/wiki/#{b.capitalize}"
-      url = URI.parse(link)
-      req = Net::HTTP.new(url.host, url.port)
-      req.use_ssl = true
-      res = req.request_head(url.path)
-      if res.code.to_i == 200 
-        runner(link)
-      else 
-        puts "That link doesn't work! Try again"
-        getters 
-      end 
-    elsif a == "n"
-      puts "Goodbye!"
-      return 
-    else 
-      puts "Not a valid response, please try again."
-    end 
-  end 
   
   
   def runner(link)
@@ -122,7 +88,7 @@ class Wikipedia
       @path << fin_elem[6...-1]
       runner("https://en.wikipedia.org#{fin_elem}")
     else 
-      # puts "You got caught in a loop :("
+      puts "You got caught in a loop :("
       @@fails += 1 
       return 
     end 
@@ -133,17 +99,50 @@ class Wikipedia
 end 
 
 i = 0 
-while i <= 100
+while i <= 10
   tryal = Wikipedia.new 
   tryal.runner("https://en.wikipedia.org/wiki/Special:Random")
   i += 1 
-  a.insert(1,'/')
-  puts a 
 end 
 
-TkFrame.new
+
+def rules 
+    puts "Wikispeedia is simple. You start at a Wikipedia of your choosing. From that page, one would click the first link, which is the text highlighted in blue, that isn't a disambiguation or in parentheses. One would keep doing this until you get to the goal page, which is Philosophy."
+    getters
+  end 
+  
+  def getters
+    puts "Hello! Welcome to Wikispeedia a la Zach!"
+    puts "Do you want to play?"
+    puts "Input 'y' to play."
+    puts "Input 'n' to quit."
+    puts "Input 'r' to read the rules of the game."
+    a = gets.chomp
+    if a == 'r'
+      rules 
+    elsif a == "y"
+      puts "What wikipedia page do you want to start on?"
+      b = gets.chomp
+      link = "https://en.wikipedia.org/wiki/#{b.capitalize}"
+      url = URI.parse(link)
+      req = Net::HTTP.new(url.host, url.port)
+      req.use_ssl = true
+      res = req.request_head(url.path)
+      if res.code.to_i == 200 
+        new = Wikipedia.new(link)
+        new.runner(link)
+      else 
+        puts "That link doesn't work! Try again"
+        getters 
+      end 
+    elsif a == "n"
+      puts "Goodbye!"
+      return 
+    else 
+      puts "Not a valid response, please try again."
+    end 
+  end 
 
 
 
-
-puts Wikipedia.successes
+puts Wikipedia.successes.div(Wikipedia.successes + Wikipedia.fails)
