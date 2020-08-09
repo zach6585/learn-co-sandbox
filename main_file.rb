@@ -141,6 +141,7 @@ def getters
           tryal = Wikipedia.new
           tryal.runner("https://en.wikipedia.org/wiki/Special:Random")
           i += 1
+          
         end
         enders
         return
@@ -159,6 +160,7 @@ end
 
 def enders
   aa = 0
+  puts "So far, the overall success rate is #{(Wikipedia.successes.to_f/(Wikipedia.successes + Wikipedia.fails))*100}%"
   while aa == 0
     puts "Wanna try again? [y/n]"
     q = gets.chomp
