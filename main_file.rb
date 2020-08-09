@@ -3,8 +3,6 @@ require 'open-uri'
 require 'net/http'
 
 
-
-
 class Wikipedia
   @@fails = 0
   @@successes = 0
@@ -21,9 +19,6 @@ class Wikipedia
   def self.fails
     @@fails
   end 
-  
-  
-  
   def runner(link)
     if link == "https://en.wikipedia.org/wiki/Science"
         puts "We made it! It only took us #{@count} steps!"
@@ -92,57 +87,69 @@ class Wikipedia
       @@fails += 1 
       return 
     end 
-    
-    
-    
   end 
 end 
-
-i = 0 
-while i <= 10
-  tryal = Wikipedia.new 
-  tryal.runner("https://en.wikipedia.org/wiki/Special:Random")
-  i += 1 
-end 
-
-
-def rules 
-    puts "Wikispeedia is simple. You start at a Wikipedia of your choosing. From that page, one would click the first link, which is the text highlighted in blue, that isn't a disambiguation or in parentheses. One would keep doing this until you get to the goal page, which is Philosophy."
-    getters
-  end 
+ 
   
-  def getters
-    puts "Hello! Welcome to Wikispeedia a la Zach!"
-    puts "Do you want to play?"
-    puts "Input 'y' to play."
-    puts "Input 'n' to quit."
-    puts "Input 'r' to read the rules of the game."
-    a = gets.chomp
-    if a == 'r'
-      rules 
-    elsif a == "y"
-      puts "What wikipedia page do you want to start on?"
-      b = gets.chomp
-      link = "https://en.wikipedia.org/wiki/#{b.capitalize}"
-      url = URI.parse(link)
-      req = Net::HTTP.new(url.host, url.port)
-      req.use_ssl = true
-      res = req.request_head(url.path)
-      if res.code.to_i == 200 
-        new = Wikipedia.new(link)
-        new.runner(link)
-      else 
-        puts "That link doesn't work! Try again"
+  
+def rules 
+  puts "Wikispeedia is simple. You start at a Wikipedia of your choosing. From that page, one would click the first link, which is the text highlighted in blue, that isn't a disambiguation or in parentheses. One would keep doing this until you get to the goal page, which is Philosophy."
+  getters
+end 
+  
+def getters
+  puts "Hello! Welcome to Wikispeedia a la Zach!"
+  puts "Do you want to play?"
+  puts "Input 'y' to play."
+  puts "Input 'n' to quit."
+  puts "Input 'r' to read the rules of the game."
+  c = nil 
+  a = gets.chomp
+  if a == 'r'
+    rules 
+  elsif a == "y"
+    while c != "s" or c!= "b"
+      puts "Want to run it a bunch of times or do you want to run it for a specific page?"
+      puts "Input 's' for a specific page"
+      puts "'b' for a bunch of times"
+      c = gets.chomp 
+      if c == 's'
+        puts "What wikipedia page do you want to start on?"
+        b = gets.chomp
+        link = "https://en.wikipedia.org/wiki/#{b.capitalize}"
+        url = URI.parse(link)
+        req = Net::HTTP.new(url.host, url.port)
+        req.use_ssl = true
+        res = req.request_head(url.path)
+        if res.code.to_i == 200 
+          new = Wikipedia.new
+          new.runner(link)
+          getters
+        else 
+          puts "That link doesn't work! Try again"
+          getters 
+        end  
+      elsif c == 'b'
+        puts ((Wikipedia.successes.to_f/(Wikipedia.successes + Wikipedia.fails))*100).round(2)
+        i = 0 
+        while i <= 10
+          tryal = Wikipedia.new 
+          tryal.runner("https://en.wikipedia.org/wiki/Special:Random")
+          i += 1 
+        end
         getters 
+      else 
+        puts "Not a valid response, please try again."
       end 
-    elsif a == "n"
-      puts "Goodbye!"
-      return 
-    else 
-      puts "Not a valid response, please try again."
     end 
+  elsif a == "n"
+    puts "Goodbye!"
+    return 
+  else 
+    puts "Not a valid response, please try again."
   end 
+end 
 
 
 
-puts Wikipedia.successes.div(Wikipedia.successes + Wikipedia.fails)
+
