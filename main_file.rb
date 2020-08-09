@@ -44,6 +44,7 @@ class Wikipedia
         if aa == 'y'
           acc = 1
           @path.each do |elem|
+            elem = elem.sub("_"," ")
             puts "#{acc}. #{elem}"
             acc += 1 
           end 
@@ -118,7 +119,7 @@ class Wikipedia
           puts @path
           acc = 1
           @path.each do |elem|
-            elem = elem.gsub("_"," ")
+            elem = elem.ssub("_"," ")
             puts "#{acc}. #{elem}"
             acc += 1 
           end 
