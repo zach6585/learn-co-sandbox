@@ -6,10 +6,20 @@ require 'net/http'
 class Wikipedia
   @@fails = 0
   @@successes = 0
+  @@all = []
     attr_accessor :path, :count
-  def initialize
+    attr_reader :link
+  def initialize(link, choice)
+    @choice = choice 
+    @link = link 
     @count = 0
     @path = []
+    if @choice == 1 
+      if !@@all.include?(link)
+        @@all << link 
+      else
+      end
+    end 
   end
 
   def self.successes
@@ -19,16 +29,27 @@ class Wikipedia
   def self.fails
     @@fails
   end
+  
+  def self.all 
+    @@all 
+  end 
+  
   def runner(link)
     if link == "https://en.wikipedia.org/wiki/Science"
-        puts "We made it! It only took us #{@count} steps!"
-        @@successes += 1
+      puts "We made it! It only took us #{@count} steps!"
+      @@successes += 1
+      if @choice == 1 
         puts "Want to see the path you took? [y/n]"
         aa = gets.chomp
         if aa == 'y'
-          puts @path
+          acc = 1
+          @path.each do |elem|
+            puts "#{acc}. #{elem}"
+            acc += 1 
+          end 
         end
-        return
+      end 
+      return
     end
     @count += 1
     i = 0
@@ -90,6 +111,19 @@ class Wikipedia
     else
       puts "You got caught in a loop :("
       @@fails += 1
+      if @choice == 1 
+        puts "Want to see the path you took? [y/n]"
+        aa = gets.chomp
+        if aa == 'y'
+          puts @path
+          acc = 1
+          @path.each do |elem|
+            elem = elem.gsub("_"," ")
+            puts "#{acc}. #{elem}"
+            acc += 1 
+          end 
+        end
+      end 
       return
     end
   end
@@ -127,8 +161,8 @@ def getters
         req.use_ssl = true
         res = req.request_head(url.path)
         if res.code.to_i == 200
-          new = Wikipedia.new
-          new.runner(link)
+          new = Wikipedia.new(link,1)
+          new.runner(new.link)
           enders
           return
         else
@@ -138,8 +172,8 @@ def getters
       elsif c == 'b'
         i = 0
         while i <= 10
-          tryal = Wikipedia.new
-          tryal.runner("https://en.wikipedia.org/wiki/Special:Random")
+          tryal = Wikipedia.new("https://en.wikipedia.org/wiki/Special:Random",0)
+          tryal.runner(tryal.link)
           i += 1
           
         end
@@ -160,7 +194,7 @@ end
 
 def enders
   aa = 0
-  puts "So far, the overall success rate is #{(Wikipedia.successes.to_f/(Wikipedia.successes + Wikipedia.fails))*100}%"
+  puts "So far, the overall success rate is #{((Wikipedia.successes.to_f/(Wikipedia.successes + Wikipedia.fails))*100).round(2)}%"
   while aa == 0
     puts "Wanna try again? [y/n]"
     q = gets.chomp
