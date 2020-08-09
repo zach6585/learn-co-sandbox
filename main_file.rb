@@ -171,12 +171,22 @@ def getters
           enders
         end
       elsif c == 'b'
-        i = 0
-        while i <= 10
+        j = 0 
+        while j == 0 
+          puts "How many times do you want to loop?"
+          int = gets.chomp
+          if int.gsub(/[^0-9]/,"").strip.empty?
+            puts "Not a number. Please try again."
+          else 
+            j += 1 
+          end 
+        end 
+        int = int.to_i
+        i = 0 
+        while i <= int 
           tryal = Wikipedia.new("https://en.wikipedia.org/wiki/Special:Random",0)
           tryal.runner(tryal.link)
           i += 1
-          
         end
         enders
         return
