@@ -14,7 +14,7 @@ class Wikipedia
     @link = link
     @count = 0
     @path = []
-    if @choice == 1
+    if @choice == 0
       @@all << self
     end
   end
@@ -223,7 +223,7 @@ def getters
         end
         int = int.to_i
         i = 0
-        while i <= int
+        while i < int
           tryal = Wikipedia.new("https://en.wikipedia.org/wiki/Special:Random",0)
           tryal.runner(tryal.link)
           i += 1
