@@ -1,3 +1,4 @@
+
 require 'nokogiri'
 require 'open-uri'
 require 'net/http'
@@ -119,7 +120,7 @@ class Wikipedia
           puts @path
           acc = 1
           @path.each do |elem|
-            elem = elem.ssub("_"," ")
+            elem = elem.gsub("_"," ")
             puts "#{acc}. #{elem}"
             acc += 1 
           end 
@@ -164,11 +165,11 @@ def getters
         if res.code.to_i == 200
           new = Wikipedia.new(link,1)
           new.runner(new.link)
-          enders
+          enders(1)
           return
         else
           puts "That link doesn't work! Try again"
-          enders
+          getters
         end
       elsif c == 'b'
         j = 0 
@@ -188,7 +189,7 @@ def getters
           tryal.runner(tryal.link)
           i += 1
         end
-        enders
+        enders(0)
         return
       else
         puts "Not a valid response, please try again."
@@ -203,9 +204,10 @@ def getters
   end
 end
 
-def enders
+def enders(num)
   aa = 0
-  puts "So far, the overall success rate is #{((Wikipedia.successes.to_f/(Wikipedia.successes + Wikipedia.fails))*100).round(2)}%"
+  if num == 0 
+    puts "So far, the overall success rate is #{((Wikipedia.successes.to_f/(Wikipedia.successes + Wikipedia.fails))*100).round(2)}%"
   while aa == 0
     puts "Wanna try again? [y/n]"
     q = gets.chomp
