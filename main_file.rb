@@ -16,10 +16,7 @@ class Wikipedia
     @count = 0
     @path = []
     if @choice == 1 
-      if !@@all.include?(link)
-        @@all << link 
-      else
-      end
+      @@all << self
     end 
   end
 
@@ -155,9 +152,9 @@ def getters
       puts "'b' for a bunch of times"
       c = gets.chomp
       if c == 's'
-        k = 0 
         bb = 0 
         while bb == 0 
+          k = 0 
           puts "What wikipedia page do you want to start on?"
           b = gets.chomp
           link = "https://en.wikipedia.org/wiki/#{b.capitalize}"
@@ -176,6 +173,7 @@ def getters
               new = Wikipedia.new(link,1)
               new.runner(new.link)
               enders(1)
+              bb += 1 
               return
             else
               puts "That link doesn't work! Try again"
@@ -219,6 +217,7 @@ def enders(num)
   aa = 0
   if num == 0 
     puts "So far, the overall success rate is #{((Wikipedia.successes.to_f/(Wikipedia.successes + Wikipedia.fails))*100).round(2)}%"
+  end 
   while aa == 0
     puts "Wanna try again? [y/n]"
     q = gets.chomp
