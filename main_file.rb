@@ -155,22 +155,33 @@ def getters
       puts "'b' for a bunch of times"
       c = gets.chomp
       if c == 's'
-        puts "What wikipedia page do you want to start on?"
-        b = gets.chomp
-        link = "https://en.wikipedia.org/wiki/#{b.capitalize}"
-        url = URI.parse(link)
-        req = Net::HTTP.new(url.host, url.port)
-        req.use_ssl = true
-        res = req.request_head(url.path)
-        if res.code.to_i == 200
-          new = Wikipedia.new(link,1)
-          new.runner(new.link)
-          enders(1)
-          return
-        else
-          puts "That link doesn't work! Try again"
-          getters
-        end
+        k = 0 
+        bb = 0 
+        while bb == 0 
+          puts "What wikipedia page do you want to start on?"
+          b = gets.chomp
+          link = "https://en.wikipedia.org/wiki/#{b.capitalize}"
+          Wikipedia.all.each do |el|
+            if el.link == link 
+              k +=1 
+              puts "You've done this one already. Try again!"
+            end 
+          end 
+          if k == 0 
+            url = URI.parse(link)
+            req = Net::HTTP.new(url.host, url.port)
+            req.use_ssl = true
+            res = req.request_head(url.path)
+            if res.code.to_i == 200
+              new = Wikipedia.new(link,1)
+              new.runner(new.link)
+              enders(1)
+              return
+            else
+              puts "That link doesn't work! Try again"
+            end
+          end 
+        end 
       elsif c == 'b'
         j = 0 
         while j == 0 
